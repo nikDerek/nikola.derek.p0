@@ -1,11 +1,15 @@
 package com.revature.menu;
 
+import java.time.LocalDate;
+import java.util.List;
 import java.util.Scanner;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-//import com.revature.beans.GachaObject;
+import com.revature.beans.BankObject;
 import com.revature.beans.User;
 import com.revature.services.UserService;
 import com.revature.util.SingletonScanner;
@@ -36,20 +40,38 @@ public class Menu {
 				} else {
 					loggedUser = u;
 					System.out.println("Welcome back: "+u.getUsername());
-					// call our next method (either the Player menu or the Admin menu, depending on user)
+					// call our next method (either the Member menu or the Associate menu, depending on user)
 					log.info("Successful login for user: "+loggedUser);
 					switch(loggedUser.getType()) {
-					case PLAYER:
-						player();
+					case MEMBER:
+						member();
 						break;
-					case GAME_MASTER:
-						master();
+					case ASSOCIATE:
+						associate();
 						break;
 					}
 				}
 				break;
 			case 2:
-				// register
+				System.out.println("Choose your username: ");
+				String newName = scan.nextLine();
+				if(!us.checkAvailability(newName)) {
+					System.out.println("Username not available, please try again.");
+					continue mainLoop;
+				}
+				System.out.println("Enter your email address: ");
+				String email = scan.nextLine();
+				System.out.println("enter your birthday (YYYY/MM/DD): ");
+				List<Integer> bday = Stream.of(scan.nextLine().split("/"))
+						.map((str)->Integer.parseInt(str)).collect(Collectors.toList());
+				
+				LocalDate birth = LocalDate.of(bday.get(0), bday.get(1), bday.get(2));
+				if(!us.checkBirthday(birth)) {
+					System.out.println("Not old enough, please try again when you are older.");
+					continue mainLoop;
+				}
+				System.out.println("Registering...");
+				us.register(newName, email, birth);
 				break;
 			case 3:
 				// quit
@@ -75,10 +97,10 @@ public class Menu {
 		return selection;
 	}
 	
-	private void player() {
-		log.trace("called player()");
+	private void member() {
+		log.trace("called member()");
 		player: while(true) {
-			switch(playerMenu()) {
+			switch(memberMenu()) {
 			case 1:
 				// daily bonus
 				if(us.hasCheckedIn(loggedUser)) {
@@ -86,12 +108,12 @@ public class Menu {
 					break;
 				}
 				us.doCheckIn(loggedUser);
-				System.out.println("You gained "+GachaObject.DAILY_BONUS+" du-cats!");
-				System.out.println("Your new total is "+loggedUser.getCurrency()+" du-cats!");
+				System.out.println("You gained $"+BankObject.DAILY_BONUS);
+				System.out.println("Your new total is $"+loggedUser.getCurrency());
 				break;
 			case 2:
 				// view currency
-				System.out.println("You currently have "+loggedUser.getCurrency()+" du-cats.");
+				System.out.println("You currently have $"+loggedUser.getCurrency());
 				break;
 			case 3:
 				// spend currency
@@ -104,16 +126,16 @@ public class Menu {
 		}
 	}
 	
-	private int playerMenu() {
+	private int memberMenu() {
 		System.out.println("What would you like to do?");
-		System.out.println("\t1. Daily Bonus");
-		System.out.println("\t2. See Currency");
-		System.out.println("\t3. Summon");
+		System.out.println("\t1. Deposit");
+		System.out.println("\t2. Check Balance");
+		System.out.println("\t3. Make Withdrawal");
 		System.out.println("\t4. Logout");
 		return select();
 	}
-	private void master() {
-		master: while(true) {
+	private void associate() {
+		associate: while(true) {
 			
 		}
 	}

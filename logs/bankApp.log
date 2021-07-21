@@ -1,0 +1,10 @@
+2021-07-21 12:12:30 TRACE Menu:27 - Start BankApp. start()
+2021-07-21 12:12:30 TRACE Menu:89 - called startMenu()
+2021-07-21 12:12:40 TRACE Menu:96 - Start menu returning selection: 2
+2021-07-21 12:13:00 DEBUG UserService:59 - 2005-07-21
+2021-07-21 12:13:00 DEBUG UserService:61 - 2005-07-22
+2021-07-21 12:13:00 TRACE Menu:89 - called startMenu()
+2021-07-21 12:13:04 TRACE Menu:96 - Start menu returning selection: 1
+2021-07-21 12:13:10 DEBUG Menu:34 - Nik
+2021-07-21 12:13:10 INFO  Menu:44 - Successful login for user: User [id=4, username=Nik, email=nik@email.com, birthday=2000-01-01, type=MEMBER, currency=1000, lastCheckIn=2021-01-01]
+2021-07-21 12:13:10 TRACE Menu:101 - called member()
